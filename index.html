@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instagrams EBAT</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta name="description" content="Lista de Instagrams dos alunos da EBAT para fortalecer as conexões.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Paleta tirada do logo da EBAT */
+  :root {
+    --red: #fd3d2c;
+    --pink: #eb3293;
+    --magenta: #b70fa3;
+    --indigo: #3431a0;
+    --blue: #1b9bd9;
+    --ink: #462850;
+
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --text: #462850;
+    --muted: #7d6c85;
+    --line: #e6dfe9;
+    --panel: #462850;
+    --panel-text: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #140c18;
+      --surface: #1c1221;
+      --text: #efe6f3;
+      --muted: #a896b0;
+      --line: #33253a;
+      --panel: #241729;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Montserrat", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  /* Cabeçalho */
+  header {
+    display: grid; grid-template-columns: 1fr minmax(0, 380px); gap: 32px; align-items: center;
+    padding: 48px 0 40px; border-bottom: 1px solid var(--line);
+  }
+  .logo {
+    display: block; width: 88px; height: auto;
+    background: #fff; border-radius: 12px; padding: 4px;
+  }
+  .eyebrow {
+    margin: 28px 0 8px; font-size: .78rem; font-weight: 600;
+    letter-spacing: .28em; text-transform: uppercase; color: var(--pink);
+  }
+  h1 {
+    margin: 0; font-weight: 500; text-transform: uppercase;
+    font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.12; letter-spacing: .08em;
+  }
+  header p.lead { margin: 16px 0 0; max-width: 480px; color: var(--muted); }
+  .circuit { width: 100%; height: auto; display: block; }
+
+  /* Barra de busca */
+  .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 32px 0 20px; }
+  .field {
+    flex: 1 1 260px; padding: 12px 14px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--text);
+    font: inherit; outline: none;
+  }
+  .field:focus { border-color: var(--pink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pink) 18%, transparent); }
+  .count { font-size: .85rem; color: var(--muted); letter-spacing: .04em; }
+  .count b { color: var(--text); font-weight: 500; }
+  button {
+    font: inherit; font-weight: 600; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase;
+    cursor: pointer; border-radius: 8px; padding: 12px 18px; white-space: nowrap;
+    border: 1px solid var(--text); background: transparent; color: var(--text);
+  }
+  button:hover { background: var(--text); color: var(--bg); }
+
+  /* Lista: cada perfil é um "nó" do circuito */
+  .grid {
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .card {
+    --c: var(--pink);
+    position: relative; display: flex; align-items: center; gap: 12px; min-width: 0;
+    padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--surface); color: inherit; text-decoration: none;
+    transition: border-color .15s ease;
+  }
+  .ig { flex: none; width: 22px; height: 22px; display: block; transition: transform .2s ease; }
+  .handle { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; }
+  .arrow { flex: none; color: var(--muted); font-size: .9rem; transition: color .15s ease, transform .15s ease; }
+  .card:hover { border-color: var(--c); }
+  .card:hover .ig { transform: scale(1.12); }
+  .card:hover .arrow { color: var(--c); transform: translate(2px, -2px); }
+  .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 40px 0; }
+
+  /* Bloco de adicionar */
+  .add {
+    position: relative; overflow: hidden;
+    margin: 56px 0 0; padding: 36px 32px; border-radius: 12px;
+    background: var(--panel); color: var(--panel-text);
+  }
+  .add::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+    background: linear-gradient(90deg, var(--red), var(--pink), var(--magenta), var(--indigo), var(--blue));
+  }
+  .add h2 { margin: 0 0 8px; font-weight: 500; font-size: 1.4rem; text-transform: uppercase; letter-spacing: .1em; }
+  .add p { margin: 0 0 20px; color: #d9c9df; max-width: 560px; }
+  .add form { display: flex; gap: 10px; flex-wrap: wrap; max-width: 560px; }
+  .add .field { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); color: #fff; }
+  .add .field::placeholder { color: #bca8c4; }
+  .add button { background: var(--pink); border-color: var(--pink); color: #fff; }
+  .add button:disabled { opacity: .6; cursor: wait; }
+  .add button:hover { background: #fff; border-color: #fff; color: var(--ink); }
+  .msg { margin-top: 12px; font-size: .9rem; min-height: 1.4em; color: #fff; }
+
+  footer {
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    padding: 24px 0 48px; color: var(--muted); font-size: .8rem; letter-spacing: .06em;
+  }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(16px);
+    background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 8px; font-size: .9rem;
+    opacity: 0; transition: .2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 720px) {
+    header { grid-template-columns: 1fr; gap: 24px; padding-top: 32px; }
+    .circuit { max-width: 320px; }
+    .add { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <img class="logo" src="logo.png" alt="EBAT" width="88" height="88">
+        <p class="eyebrow">Rede de alunos</p>
+        <h1>Conexões<br>EBAT</h1>
+        <p class="lead">Os @ dos alunos da EBAT reunidos num só lugar. Siga, curta e fortaleça a rede no Instagram.</p>
+      </div>
+      <svg class="circuit" viewBox="0 0 380 250" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="g" x1="60" y1="200" x2="320" y2="30" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#fd3d2c"/>
+            <stop offset=".3" stop-color="#eb3293"/>
+            <stop offset=".55" stop-color="#b70fa3"/>
+            <stop offset=".78" stop-color="#3431a0"/>
+            <stop offset="1" stop-color="#1b9bd9"/>
+          </linearGradient>
+        </defs>
+        <g stroke="url(#g)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M150 20 H260 L310 70 V130"/>
+          <path d="M100 55 H200 L230 85 H300"/>
+          <path d="M40 100 H140 L170 130 H270"/>
+          <path d="M70 145 H150 L185 180 H240"/>
+          <path d="M110 200 L140 175"/>
+          <path d="M200 225 L250 175 V120 L280 95"/>
+          <path d="M300 160 V200 L330 225"/>
+        </g>
+        <g fill="url(#g)">
+          <circle cx="150" cy="20" r="9"/>
+          <circle cx="100" cy="55" r="9"/><circle cx="300" cy="85" r="9"/>
+          <circle cx="40" cy="100" r="9"/><circle cx="270" cy="130" r="9"/>
+          <circle cx="70" cy="145" r="9"/><circle cx="240" cy="180" r="9"/>
+          <circle cx="110" cy="200" r="9"/>
+          <circle cx="200" cy="225" r="9"/><circle cx="280" cy="95" r="9"/>
+          <circle cx="300" cy="160" r="9"/>
+        </g>
+      </svg>
+    </header>
+
+    <div class="toolbar">
+      <input class="field" id="busca" type="search" placeholder="Buscar um @..." aria-label="Buscar perfil">
+      <span class="count mono" id="contagem">carregando…</span>
+      <button id="copiar" type="button">Copiar lista</button>
+    </div>
+
+    <main class="grid" id="lista"></main>
+
+    <section class="add" id="adicionar">
+      <h2>Adicione seu @</h2>
+      <p>Digite seu usuário e envie. Não precisa de login: em alguns minutos ele aparece para todo mundo.</p>
+      <form id="form">
+        <input class="field mono" id="novo" type="text" placeholder="@seuusuario" autocomplete="off" required>
+        <button type="submit" id="enviar">Enviar</button>
+      </form>
+      <div class="msg" id="msg" role="status"></div>
+    </section>
+
+    <footer>
+      <span>EBAT · Rede de alunos</span>
+      <span class="mono" id="rodape"></span>
+    </footer>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+  // Configuração do Google Forms (veja o README para saber onde pegar cada valor).
+  const CONFIG = {
+    // Link de envio do formulário: troque "viewform" por "formResponse" no link do formulário
+    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdHinbdwV54TSy7OpikNSVcHSrsqcAqK-oE-ug6Bvltc6Dvvw/formResponse',
+    // Nome do campo da pergunta, pego no "link pré-preenchido" (ex.: entry.123456789)
+    formCampo: 'entry.407779339',
+    // Planilha de respostas (compartilhada como "qualquer pessoa com o link pode ver"), lida como CSV
+    csvUrl: 'https://docs.google.com/spreadsheets/d/1m0Zhsv2_KyMlmfI-S4y7L8vkAkdoP2ZxyC5oYBwa1f0/gviz/tq?tqx=out:csv'
+  };
+
+  const HANDLE_RE = /^[a-z0-9._]{1,30}$/;
+  const CORES = ['var(--red)', 'var(--pink)', 'var(--magenta)', 'var(--indigo)', 'var(--blue)'];
+  const $ = (id) => document.getElementById(id);
+  let perfis = [];
+
+  function normalizar(texto) {
+    return texto.trim().replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/[/?].*$/, '').toLowerCase();
+  }
+
+  function unicos(lista) {
+    const vistos = new Set();
+    return lista.map(normalizar).filter((h) => HANDLE_RE.test(h) && !vistos.has(h) && vistos.add(h));
+  }
+
+  function linhasTxt(texto) {
+    return texto.split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
+  }
+
+  // Lê o CSV das respostas e devolve a última célula preenchida (o @) de cada linha, sem o cabeçalho.
+  function linhasCsv(texto) {
+    const linhas = [];
+    let campo = '', linha = [], aspas = false;
+    for (let i = 0; i < texto.length; i++) {
+      const c = texto[i];
+      if (aspas) {
+        if (c === '"' && texto[i + 1] === '"') { campo += '"'; i++; }
+        else if (c === '"') aspas = false;
+        else campo += c;
+      } else if (c === '"') aspas = true;
+      else if (c === ',') { linha.push(campo); campo = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && texto[i + 1] === '\n') i++;
+        linha.push(campo); linhas.push(linha); linha = []; campo = '';
+      } else campo += c;
+    }
+    if (campo || linha.length) { linha.push(campo); linhas.push(linha); }
+    return linhas.slice(1).map((l) => l.filter((c) => c.trim()).pop() || '');
+  }
+
+  const pad = (n) => String(n).padStart(3, '0');
+
+  function render() {
+    const termo = normalizar($('busca').value);
+    const filtrados = perfis.filter((h) => h.includes(termo));
+    $('lista').innerHTML = filtrados.length
+      ? filtrados.map((h) => `
+        <a class="card" href="https://instagram.com/${h}" target="_blank" rel="noopener" style="--c:${CORES[perfis.indexOf(h) % CORES.length]}">
+          <img class="ig" src="instagram_1384063.svg" alt="" width="22" height="22">
+          <span class="handle mono">@${h}</span>
+          <span class="arrow">↗</span>
+        </a>`).join('')
+      : '<p class="empty">Nenhum perfil encontrado.</p>';
+    $('contagem').innerHTML = termo
+      ? `<b>${pad(filtrados.length)}</b> / ${pad(perfis.length)} perfis`
+      : `<b>${pad(perfis.length)}</b> perfis`;
+    $('rodape').textContent = `${perfis.length} conexões`;
+  }
+
+  function toast(texto) {
+    const t = $('toast');
+    t.textContent = texto;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  async function buscarTexto(url) {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(res.status);
+    return res.text();
+  }
+
+  async function carregar() {
+    const [txt, csv] = await Promise.allSettled([
+      buscarTexto('perfis.txt'),
+      CONFIG.csvUrl.startsWith('http') ? buscarTexto(CONFIG.csvUrl) : Promise.reject(new Error('sem csv'))
+    ]);
+    const lista = [
+      ...(txt.status === 'fulfilled' ? linhasTxt(txt.value) : []),
+      ...(csv.status === 'fulfilled' ? linhasCsv(csv.value) : [])
+    ];
+    if (txt.status === 'rejected' && csv.status === 'rejected') {
+      $('contagem').textContent = '';
+      $('lista').innerHTML = '<p class="empty">Não foi possível carregar a lista. Abra a página pelo GitHub Pages (ou um servidor local), não direto do arquivo.</p>';
+      return;
+    }
+    perfis = unicos(lista);
+    render();
+  }
+
+  $('busca').addEventListener('input', render);
+
+  $('copiar').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(perfis.map((h) => '@' + h).join('\n'));
+      toast('Lista copiada');
+    } catch {
+      toast('Não foi possível copiar');
+    }
+  });
+
+  $('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const h = normalizar($('novo').value);
+    const msg = $('msg');
+    if (!HANDLE_RE.test(h)) {
+      msg.textContent = 'Usuário inválido. Use apenas letras, números, ponto e sublinhado.';
+      return;
+    }
+    if (perfis.includes(h)) {
+      msg.textContent = `@${h} já está na lista.`;
+      return;
+    }
+    if (!CONFIG.formUrl.startsWith('http')) {
+      msg.textContent = 'O formulário ainda não foi configurado.';
+      return;
+    }
+    $('enviar').disabled = true;
+    try {
+      // O Google Forms não responde para outros sites, então o envio é "às cegas" (no-cors).
+      await fetch(CONFIG.formUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams({ [CONFIG.formCampo]: '@' + h })
+      });
+      perfis.push(h);
+      render();
+      $('novo').value = '';
+      msg.textContent = `Pronto! @${h} foi enviado e aparece para todos em alguns minutos.`;
+    } catch {
+      msg.textContent = 'Não foi possível enviar. Verifique sua conexão e tente de novo.';
+    } finally {
+      $('enviar').disabled = false;
+    }
+  });
+
+  carregar();
+</script>
+</body>
+</html>

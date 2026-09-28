@@ -1,0 +1,3 @@
+# Lista de Instagrams dos alunos da EBAT
+# A lista agora fica na planilha do Google Forms.
+# Um @ por linha aqui também aparece na página (opcional).
